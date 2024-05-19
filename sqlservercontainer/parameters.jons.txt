@@ -6,23 +6,23 @@
             "value": "a45110d4-a8e5-4d3d-9324-9e302d45e2e4"
         },
         "name": {
-            "value": "sqlserver2019"
+            "value": "sqlserver2019container"
         },
         "location": {
             "value": "westeurope"
         },
         "environmentId": {
-            "value": "/subscriptions/a45110d4-a8e5-4d3d-9324-9e302d45e2e4/resourceGroups/AdnanResouceGroup/providers/Microsoft.App/managedEnvironments/sqlserverdemoappenv"
+            "value": "/subscriptions/a45110d4-a8e5-4d3d-9324-9e302d45e2e4/resourceGroups/ARMTemplates/providers/Microsoft.App/managedEnvironments/sqlserverdemocontainerapp"
         },
         "containers": {
             "value": [
                 {
-                    "name": "sqlserver2019",
-                    "image": "docker.io/mcr.microsoft.com/mssql/server:2019-latest",
+                    "name": "sqlserver2019container",
+                    "image": "mcr.microsoft.com/mssql/server:2019-latest",
                     "command": [],
                     "resources": {
-                        "cpu": "0.75",
-                        "memory": "1.5Gi"
+                        "cpu": "1",
+                        "memory": "2Gi"
                     },
                     "env": [
                         {
@@ -48,9 +48,10 @@
         "ingress": {
             "value": {
                 "external": true,
-                "transport": "Auto",
+                "transport": "Tcp",
                 "allowInsecure": false,
                 "targetPort": 1433,
+                "exposedPort": 1433,
                 "stickySessions": {
                     "affinity": "none"
                 },
@@ -58,10 +59,10 @@
             }
         },
         "environmentName": {
-            "value": "sqlserverdemoappenv"
+            "value": "sqlserverdemocontainerapp"
         },
         "workspaceName": {
-            "value": "workspacesqlservedemoappenv"
+            "value": "workspacearmtemplates9ec5"
         },
         "workspaceLocation": {
             "value": "westeurope"
