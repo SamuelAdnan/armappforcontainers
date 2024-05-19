@@ -1,0 +1,70 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": "a45110d4-a8e5-4d3d-9324-9e302d45e2e4"
+        },
+        "name": {
+            "value": "sqlserver2019"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "environmentId": {
+            "value": "/subscriptions/a45110d4-a8e5-4d3d-9324-9e302d45e2e4/resourceGroups/AdnanResouceGroup/providers/Microsoft.App/managedEnvironments/sqlserverdemoappenv"
+        },
+        "containers": {
+            "value": [
+                {
+                    "name": "sqlserver2019",
+                    "image": "docker.io/mcr.microsoft.com/mssql/server:2019-latest",
+                    "command": [],
+                    "resources": {
+                        "cpu": "0.75",
+                        "memory": "1.5Gi"
+                    },
+                    "env": [
+                        {
+                            "name": "ACCEPT_EULA",
+                            "value": "Y"
+                        },
+                        {
+                            "name": "MSSQL_SA_PASSWORD",
+                            "value": "Password@12345#"
+                        }
+                    ]
+                }
+            ]
+        },
+        "registries": {
+            "value": []
+        },
+        "secrets": {
+            "value": {
+                "arrayValue": []
+            }
+        },
+        "ingress": {
+            "value": {
+                "external": true,
+                "transport": "Auto",
+                "allowInsecure": false,
+                "targetPort": 1433,
+                "stickySessions": {
+                    "affinity": "none"
+                },
+                "additionalPortMappings": []
+            }
+        },
+        "environmentName": {
+            "value": "sqlserverdemoappenv"
+        },
+        "workspaceName": {
+            "value": "workspacesqlservedemoappenv"
+        },
+        "workspaceLocation": {
+            "value": "westeurope"
+        }
+    }
+}
