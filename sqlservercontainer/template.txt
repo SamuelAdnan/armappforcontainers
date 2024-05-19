@@ -60,7 +60,8 @@
                 "template": {
                     "containers": "[parameters('containers')]",
                     "scale": {
-                        "minReplicas": 0
+                        "minReplicas": 1,
+                        "maxReplicas": 1
                     }
                 },
                 "workloadProfileName": "Consumption"
@@ -72,7 +73,8 @@
             "type": "Microsoft.App/managedEnvironments",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+                "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]",
+                "Microsoft.Resources/deployments/newInfrastructureSubnetTemplate"
             ],
             "properties": {
                 "appLogsConfiguration": {
@@ -87,7 +89,12 @@
                         "name": "Consumption",
                         "workloadProfileType": "Consumption"
                     }
-                ]
+                ],
+                "vnetConfiguration": {
+                    "infrastructureSubnetId": "/subscriptions/a45110d4-a8e5-4d3d-9324-9e302d45e2e4/resourceGroups/ARMTemplates/providers/Microsoft.Network/virtualNetworks/sqlvnetcont/subnets/subnetsql",
+                    "internal": false
+                },
+                "zoneRedundant": false
             }
         },
         {
@@ -102,6 +109,63 @@
                 },
                 "retentionInDays": 30,
                 "workspaceCapping": {}
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "name": "newInfrastructureSubnetTemplate",
+            "resourceGroup": "ARMTemplates",
+            "subscriptionId": "a45110d4-a8e5-4d3d-9324-9e302d45e2e4",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                            "apiVersion": "2020-07-01",
+                            "name": "sqlvnetcont/subnetsql",
+                            "properties": {
+                                "delegations": [
+                                    {
+                                        "name": "Microsoft.App.environments",
+                                        "id": "/subscriptions/a45110d4-a8e5-4d3d-9324-9e302d45e2e4/resourceGroup/ARMTemplates/providers/Microsoft.Network/availableDelegations/Microsoft.App.environments",
+                                        "type": "Microsoft.Network/availableDelegations",
+                                        "properties": {
+                                            "serviceName": "Microsoft.App/environments",
+                                            "actions": [
+                                                "Microsoft.Network/virtualNetworks/subnets/join/action"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "serviceEndpoints": [],
+                                "addressPrefix": "10.0.0.0/23"
+                            }
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'sqlvnetcont')]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-07-01",
+            "location": "westeurope",
+            "name": "sqlvnetcont",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": []
             }
         }
     ]
